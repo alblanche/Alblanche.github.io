@@ -3,7 +3,7 @@
     "path": "C:/Users/albla/OneDrive - USU/Spring 2023/WILD_6900/Bookdown/Bookdown_final_project/index.Rmd",
     "project_path": "index.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "2619692911",
     "contents": "",
     "dirty": false,
     "created": 1679271487345.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "10,74",
-        "scrollLine": "2"
+        "cursorPosition": "18,0",
+        "scrollLine": "4"
     },
     "folds": "",
-    "lastKnownWriteTime": 1679271479,
+    "lastKnownWriteTime": 1679277641,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1679271479,
+    "last_content_update": 1679277641961,
     "read_only": false,
     "read_only_alternatives": []
 }
