@@ -3,9 +3,9 @@
     "path": "C:/Users/albla/OneDrive - USU/Spring 2023/WILD_6900/Bookdown/Bookdown_final_project/_bookdown.yml",
     "project_path": "_bookdown.yml",
     "type": "yaml",
-    "hash": "0",
+    "hash": "2929246348",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1679271487997.0,
     "source_on_save": false,
     "relative_order": 3,
@@ -16,11 +16,11 @@
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1679271479,
+    "lastKnownWriteTime": 1679274292,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1679272737423,
+    "last_content_update": 1679274292749,
     "read_only": false,
     "read_only_alternatives": []
 }
