@@ -37,13 +37,10 @@ Condors <- dbConnect(RSQLite::SQLite(), "condors.db")
 Now I can begin building tables. I'll start with Condor_individuals.
 The code below creates a blank table called Condor_individuals with columns 
 for Condor_ID, Studbook_Number, Sex, Birthdate, et cetera. The type of data 
-that can fit within each column is specified after the column name. For 
-example, Sex is a single character, while Paired_with_2022 is an integer that
-can contain 4 numbers (as this is the studbook number of the condor that that
-individual was paired with in 2022, and studbook numbers can be up to 4 
-integers). At the end, PRIMARY KEY denotes which column acts as the unique 
+that can fit within each column is specified after the column name. For example, Sex is a single character, while Paired_with_2022 is an integer that
+can contain 4 numbers (as this is the studbook number of the condor that that individual was paired with in 2022, and studbook numbers can be up to 4 integers). At the end, PRIMARY KEY denotes which column acts as the unique 
 identifier for each row.
-``` {r}
+``` {r eval=FALSE}
 dbExecute(Condors, "CREATE TABLE Condor_individuals (
 Condor_ID char(2) NOT NULL,
 Studbook_Number int(4),
@@ -57,11 +54,11 @@ PRIMARY KEY (Condor_ID)
 );")
 ```
 This pattern is continued for creating other tables. At the end of tables with columns that reference other columns in other tables, I included the following code right after my last column:
-```{r}
+```{r eval=FALSE}
 FOREIGN KEY(Column_in_this_table) REFERENCES Other_table(Column_in_other_table)
 ```
 So, for example, this creates an appended version of my Visits table. I have removed several columns for clarity. The last two lines are creating relations between tables, so that the Carcass column is linked to ID_numer within the Carcasses table, and Individual column is linked to Condor_ID column in Condor_individuals table.
-```{r}
+```{r eval=FALSE}
 dbExecute(Condors, "CREATE TABLE Visits (
 ID INTEGER PRIMARY KEY,
 Visit_per_individual int(2),
@@ -84,16 +81,12 @@ FOREIGN KEY(Individual) REFERENCES Condor_individuals(Condor_ID)
 ### Adding data to tables
 Now that empty tables exist, data can be put into them. I simply read my file containing my data into a new object and then append that table, including all the rows of data, with the empty tables I just created. This combines all my data with the empty table containing all the rules (for example, that the column can only contain rows of a single integer).
 ```{r}
-Visits<-read.csv("C:/Users/albla/OneDrive - USU/Thesis Research/Visits.csv",
+Visits<-read.csv("../../Homework/Data_files/Visits.csv",
                          stringsAsFactors=FALSE)
 dbWriteTable(Condors,"Visits",Visits,append=TRUE)
 ```
 I made sure to check that the data was loaded in using 
-```{r}
+```{r eval=FALSE}
 dbGetQuery(Condors, "SELECT * FROM Visits LIMIT 10;")
 ```
 which prints the first 10 rows of data from the table Visits.
-
-### An unnumbered section {-}
-
-Chapters and sections are numbered by default. To un-number a heading, add a `{.unnumbered}` or the shorter `{-}` at the end of the heading, like in this section.

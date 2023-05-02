@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Cleaning Data | Condor Data Organization RDS FInal Project</title>
+  <meta name="description" content="This is my final project for Reproducible Data Science 2023. I use the bookdown package to write a book describing cleaning my Master’s data to be reproducible." />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Cleaning Data | Condor Data Organization RDS FInal Project" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://github.com/alblanche/Blanche_bookdown_RDS/Bookdown/condor.jpg" />
+  <meta property="og:description" content="This is my final project for Reproducible Data Science 2023. I use the bookdown package to write a book describing cleaning my Master’s data to be reproducible." />
+  <meta name="github-repo" content="alblanche/Blanche_bookdown_RDS" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Cleaning Data | Condor Data Organization RDS FInal Project" />
+  
+  <meta name="twitter:description" content="This is my final project for Reproducible Data Science 2023. I use the bookdown package to write a book describing cleaning my Master’s data to be reproducible." />
+  <meta name="twitter:image" content="https://github.com/alblanche/Blanche_bookdown_RDS/Bookdown/condor.jpg" />
+
+<meta name="author" content="Anne-Laure Blanche" />
+
+
+<meta name="date" content="2023-05-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro---database-structure.html"/>
+<link rel="next" href="plotting.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="intro---database-structure.html"><a href="intro---database-structure.html"><i class="fa fa-check"></i><b>2</b> Intro - Database Structure</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro---database-structure.html"><a href="intro---database-structure.html#designing-the-database"><i class="fa fa-check"></i><b>2.1</b> Designing the Database</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="intro---database-structure.html"><a href="intro---database-structure.html#tables"><i class="fa fa-check"></i><b>2.1.1</b> Tables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="intro---database-structure.html"><a href="intro---database-structure.html#coding-the-database"><i class="fa fa-check"></i><b>2.2</b> Coding the database</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="intro---database-structure.html"><a href="intro---database-structure.html#creating-tables"><i class="fa fa-check"></i><b>2.2.1</b> Creating tables</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro---database-structure.html"><a href="intro---database-structure.html#adding-data-to-tables"><i class="fa fa-check"></i><b>2.2.2</b> Adding data to tables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cleaning-data.html"><a href="cleaning-data.html"><i class="fa fa-check"></i><b>3</b> Cleaning Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="cleaning-data.html"><a href="cleaning-data.html#loading-initial-data-and-packages"><i class="fa fa-check"></i><b>3.1</b> Loading initial data and packages</a></li>
+<li class="chapter" data-level="3.2" data-path="cleaning-data.html"><a href="cleaning-data.html#cleaning-the-data"><i class="fa fa-check"></i><b>3.2</b> Cleaning the data</a></li>
+<li class="chapter" data-level="3.3" data-path="cleaning-data.html"><a href="cleaning-data.html#connecting-to-database"><i class="fa fa-check"></i><b>3.3</b> Connecting to database</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Condor Data Organization RDS FInal Project</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cleaning-data" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Cleaning Data<a href="cleaning-data.html#cleaning-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter describes the process I used to clean my Metadata sheet</p>
+<div id="loading-initial-data-and-packages" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Loading initial data and packages<a href="cleaning-data.html#loading-initial-data-and-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For this section, I used packages DBI and tidyverse.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="cleaning-data.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb9-2"><a href="cleaning-data.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## ── Attaching packages ──────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ─────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<p>The following code was used to load my data files:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="cleaning-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a>Video_metadata<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">&quot;../../Homework/Data_files/Video_metadata.csv&quot;</span>)</span></code></pre></div>
+<p>I changed two column names as they had periods, which could interfere with coding down the line:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="cleaning-data.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Video_metadata)[<span class="dv">5</span>]<span class="ot">&lt;-</span><span class="st">&quot;Close_wide&quot;</span></span>
+<span id="cb13-2"><a href="cleaning-data.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Video_metadata)[<span class="dv">10</span>]<span class="ot">&lt;-</span><span class="st">&quot;Still_on_SD_card&quot;</span></span></code></pre></div>
+<p>I also loaded a couple functions I wanted to use later on:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="cleaning-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a>rowShift <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">shiftLen =</span> 1L) {</span>
+<span id="cb14-2"><a href="cleaning-data.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> (1L <span class="sc">+</span> shiftLen)<span class="sc">:</span>(<span class="fu">length</span>(x) <span class="sc">+</span> shiftLen)</span>
+<span id="cb14-3"><a href="cleaning-data.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  r[r<span class="sc">&lt;</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb14-4"><a href="cleaning-data.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x[r])</span>
+<span id="cb14-5"><a href="cleaning-data.html#cb14-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-6"><a href="cleaning-data.html#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%nin%</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">Negate</span>(<span class="st">`</span><span class="at">%in%</span><span class="st">`</span>)</span></code></pre></div>
+<p>rowShift allows me to call a different row from a column when changing my “See previous row” into data that isn’t dependent on order
+%nin% is quicker than calling every possible integer and rather specifying the couple I do not want, similar to !=</p>
+</div>
+<div id="cleaning-the-data" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Cleaning the data<a href="cleaning-data.html#cleaning-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>I first checked how many different names I used for my carcasses.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="cleaning-data.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(Video_metadata<span class="sc">$</span>Species)</span></code></pre></div>
+<pre><code>##  [1] &quot;Ewe&quot;      &quot;Ewe &quot;     &quot;ewe&quot;      &quot;Lamb&quot;     &quot;lamb&quot;     &quot;Neotoma&quot; 
+##  [7] &quot;Deer&quot;     &quot;badger&quot;   &quot;chipmunk&quot; &quot;calf&quot;     &quot;&quot;         &quot;deer&quot;    
+## [13] &quot;raccoon&quot;  &quot;carp&quot;     &quot;cat&quot;      &quot;cow&quot;</code></pre>
+<p>I was able to use a long pipe to clean all my data. There are several chunks, and I have split it accordingly:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="cleaning-data.html#cb17-1" aria-hidden="true" tabindex="-1"></a>Video_metadata <span class="ot">&lt;-</span> Video_metadata <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="cleaning-data.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">case_when</span>(</span>
+<span id="cb17-3"><a href="cleaning-data.html#cb17-3" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Ewe&quot;</span>, <span class="st">&quot;Ewe &quot;</span>, <span class="st">&quot;ewe&quot;</span>) <span class="sc">~</span> <span class="st">&quot;ewe&quot;</span>,</span>
+<span id="cb17-4"><a href="cleaning-data.html#cb17-4" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Lamb&quot;</span>, <span class="st">&quot;lamb&quot;</span>) <span class="sc">~</span> <span class="st">&quot;lamb&quot;</span>,</span>
+<span id="cb17-5"><a href="cleaning-data.html#cb17-5" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Neotoma&quot;</span>, <span class="st">&quot;chipmunk&quot;</span>) <span class="sc">~</span> <span class="st">&quot;rodent&quot;</span>,</span>
+<span id="cb17-6"><a href="cleaning-data.html#cb17-6" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;raccoon&quot;</span> <span class="sc">~</span> <span class="st">&quot;raccoon&quot;</span>,</span>
+<span id="cb17-7"><a href="cleaning-data.html#cb17-7" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;carp&quot;</span> <span class="sc">~</span> <span class="st">&quot;carp&quot;</span>,</span>
+<span id="cb17-8"><a href="cleaning-data.html#cb17-8" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;calf&quot;</span> <span class="sc">~</span> <span class="st">&quot;calf&quot;</span>,</span>
+<span id="cb17-9"><a href="cleaning-data.html#cb17-9" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;cow&quot;</span> <span class="sc">~</span> <span class="st">&quot;cow&quot;</span>,</span>
+<span id="cb17-10"><a href="cleaning-data.html#cb17-10" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;badger&quot;</span> <span class="sc">~</span> <span class="st">&quot;badger&quot;</span>,</span>
+<span id="cb17-11"><a href="cleaning-data.html#cb17-11" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Deer&quot;</span>, <span class="st">&quot;deer&quot;</span>) <span class="sc">~</span> <span class="st">&quot;deer&quot;</span>,</span>
+<span id="cb17-12"><a href="cleaning-data.html#cb17-12" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;cat&quot;</span> <span class="sc">~</span> <span class="st">&quot;cat&quot;</span>,</span>
+<span id="cb17-13"><a href="cleaning-data.html#cb17-13" aria-hidden="true" tabindex="-1"></a>    Species <span class="sc">%in%</span> <span class="st">&quot;&quot;</span> <span class="sc">~</span> <span class="st">&quot;DOUBLE CHECK&quot;</span></span>
+<span id="cb17-14"><a href="cleaning-data.html#cb17-14" aria-hidden="true" tabindex="-1"></a>  )) <span class="co"># %&gt;% </span></span></code></pre></div>
+<p>This cleans up all my different “species” into recognizable carcass groups. I didn’t want to just use sheep and cattle, but instead differentiating between adult/young since there is a large size difference (and although I have weight later on, this is helpful for recognition). I also included a “Double check” group since I have some blanks, that I haven’t entered in yet.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="cleaning-data.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Still_on_SD_card =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-2"><a href="cleaning-data.html#cb18-2" aria-hidden="true" tabindex="-1"></a>    Still_on_SD_card <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span> <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,</span>
+<span id="cb18-3"><a href="cleaning-data.html#cb18-3" aria-hidden="true" tabindex="-1"></a>    Still_on_SD_card <span class="sc">==</span> <span class="st">&quot;Erased&quot;</span> <span class="sc">~</span> <span class="st">&quot;Erased&quot;</span>,</span>
+<span id="cb18-4"><a href="cleaning-data.html#cb18-4" aria-hidden="true" tabindex="-1"></a>    SD_card <span class="sc">==</span> <span class="st">&quot;&quot;</span> <span class="sc">~</span> <span class="st">&quot;Probably erased&quot;</span></span>
+<span id="cb18-5"><a href="cleaning-data.html#cb18-5" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span></code></pre></div>
+<p>The next chunk does a similar role, with the column identifying whether the video is still on an SD card. I reclassified all blanks as probably erased, as I have entered in most SD card numbers. However, I wanted to keep there separate from Erased since I’m not entirely certain about this and should go back to check.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="cleaning-data.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Any_Video =</span> <span class="fu">case_when</span>(</span>
+<span id="cb19-2"><a href="cleaning-data.html#cb19-2" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;eh&quot;</span>, <span class="st">&quot;y&quot;</span>) <span class="sc">~</span> <span class="st">&quot;yes&quot;</span>,</span>
+<span id="cb19-3"><a href="cleaning-data.html#cb19-3" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">==</span> <span class="st">&quot;n&quot;</span> <span class="sc">~</span> <span class="st">&quot;no&quot;</span>,</span>
+<span id="cb19-4"><a href="cleaning-data.html#cb19-4" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">==</span> <span class="st">&quot;see above&quot;</span> <span class="sc">~</span> <span class="fu">rowShift</span>(Video, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb19-5"><a href="cleaning-data.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-6"><a href="cleaning-data.html#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(Any_Video, <span class="at">.after =</span> Video) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-7"><a href="cleaning-data.html#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Any_Video =</span> <span class="fu">case_when</span>(</span>
+<span id="cb19-8"><a href="cleaning-data.html#cb19-8" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">==</span> <span class="st">&quot;n&quot;</span> <span class="sc">~</span> <span class="st">&quot;no&quot;</span>,</span>
+<span id="cb19-9"><a href="cleaning-data.html#cb19-9" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;eh&quot;</span>, <span class="st">&quot;y&quot;</span>) <span class="sc">~</span> <span class="st">&quot;yes&quot;</span></span>
+<span id="cb19-10"><a href="cleaning-data.html#cb19-10" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span></code></pre></div>
+<p>This is again similar. I had one column about whether I had video from the visit, but I was using this both for useful and any video (think grass swaying in the wind, with no visits from scavengers). I had called this “eh”, and here I separate the eh into no for useful video, but yes for any video. I also relocated the Any_video next to Video so I could check my work and that everything looked correct.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="cleaning-data.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Useful_Video =</span> <span class="fu">case_when</span>(</span>
+<span id="cb20-2"><a href="cleaning-data.html#cb20-2" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">==</span> <span class="st">&quot;y&quot;</span> <span class="sc">~</span> <span class="st">&quot;yes&quot;</span>,</span>
+<span id="cb20-3"><a href="cleaning-data.html#cb20-3" aria-hidden="true" tabindex="-1"></a>    Video <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;eh&quot;</span>, <span class="st">&quot;n&quot;</span>) <span class="sc">~</span> <span class="st">&quot;no&quot;</span></span>
+<span id="cb20-4"><a href="cleaning-data.html#cb20-4" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span></code></pre></div>
+<p>After I transferred data from video to Useful_Video, I mutated the data again to conform to the previous “yes”/“no” rather than y/n that was in the Video column.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="cleaning-data.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Close_wide =</span> <span class="fu">case_when</span>(</span>
+<span id="cb21-2"><a href="cleaning-data.html#cb21-2" aria-hidden="true" tabindex="-1"></a>    Visit <span class="sc">%nin%</span> <span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;&quot;</span>) <span class="sc">&amp;</span> Close_wide <span class="sc">==</span> <span class="st">&quot;wide&quot;</span> <span class="sc">~</span> <span class="st">&quot;wide&quot;</span>,</span>
+<span id="cb21-3"><a href="cleaning-data.html#cb21-3" aria-hidden="true" tabindex="-1"></a>    Visit <span class="sc">%nin%</span> <span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;&quot;</span>) <span class="sc">&amp;</span> Close_wide <span class="sc">==</span> <span class="st">&quot;close&quot;</span> <span class="sc">~</span> <span class="st">&quot;close&quot;</span>,</span>
+<span id="cb21-4"><a href="cleaning-data.html#cb21-4" aria-hidden="true" tabindex="-1"></a>    Visit <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;&quot;</span>) <span class="sc">&amp;</span> Close_wide <span class="sc">==</span> <span class="st">&quot;&quot;</span> <span class="sc">~</span> <span class="st">&quot;NA&quot;</span>,</span>
+<span id="cb21-5"><a href="cleaning-data.html#cb21-5" aria-hidden="true" tabindex="-1"></a>    Visit <span class="sc">%nin%</span> <span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;&quot;</span>) <span class="sc">&amp;</span> Close_wide <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;.&quot;</span>) <span class="sc">~</span> <span class="st">&quot;only&quot;</span></span>
+<span id="cb21-6"><a href="cleaning-data.html#cb21-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
+<p>I used my “not in” function to find the Visits that had values (ie wasn’t blank or NA). Close_wide describes camera placement, as I usually had a camera closer and one farther away (giving a wider angle view).</p>
+<p>If Visits is blank or NA that means I haven’t gotten to it yet, and Close_wide should also be blank. However, if Close_wide is blank with a value for Visit, it means only one camera was there, so I should label it as “only”. I briefly also used a period to designate “only” so I included that as well.</p>
+</div>
+<div id="connecting-to-database" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Connecting to database<a href="cleaning-data.html#connecting-to-database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that the data is cleaned, I can connect it to the condors database and have the database run all the specified checks.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="cleaning-data.html#cb22-1" aria-hidden="true" tabindex="-1"></a>Condors <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;condors.db&quot;</span>)</span>
+<span id="cb22-2"><a href="cleaning-data.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(Condors, <span class="st">&quot;CREATE TABLE metadata (</span></span>
+<span id="cb22-3"><a href="cleaning-data.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">Video_ID INTEGER PRIMARY KEY AUTOINCREMENT,</span></span>
+<span id="cb22-4"><a href="cleaning-data.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="st">Carcass char(3),</span></span>
+<span id="cb22-5"><a href="cleaning-data.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="st">Description varchar(25),</span></span>
+<span id="cb22-6"><a href="cleaning-data.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="st">Species varchar(15),</span></span>
+<span id="cb22-7"><a href="cleaning-data.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="st">Visit varchar(5),</span></span>
+<span id="cb22-8"><a href="cleaning-data.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="st">Close_wide varchar(6) CHECK (Close_wide IN (&#39;only&#39;,&#39;close&#39;,&#39;wide&#39;, &#39;NA&#39;)),</span></span>
+<span id="cb22-9"><a href="cleaning-data.html#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="st">Box_drive varchar(3) CHECK (Box_drive IN (&#39;Yes&#39;,&#39;No&#39;,&#39;&#39;)),</span></span>
+<span id="cb22-10"><a href="cleaning-data.html#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="st">External_Hard_Drive varchar(3) CHECK (External_Hard_drive IN (&#39;Yes&#39;,&#39;No&#39;,&#39;&#39;)),</span></span>
+<span id="cb22-11"><a href="cleaning-data.html#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="st">Scored_on_BORIS varchar(3) CHECK (Scored_on_BORIS IN (&#39;Yes&#39;,&#39;No&#39;,&#39;&#39;)),</span></span>
+<span id="cb22-12"><a href="cleaning-data.html#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="st">Need_to_time_offset char(3),</span></span>
+<span id="cb22-13"><a href="cleaning-data.html#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="st">Still_on_SD_card varchar(3) CHECK (Still_on_SD_card IN (&#39;Yes&#39;,&#39;Erased&#39;,&#39;Probably erased&#39;)),</span></span>
+<span id="cb22-14"><a href="cleaning-data.html#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="st">SD_card varchar(10),</span></span>
+<span id="cb22-15"><a href="cleaning-data.html#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="st">Video varchar(20),</span></span>
+<span id="cb22-16"><a href="cleaning-data.html#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="st">Any_Video varchar(20),</span></span>
+<span id="cb22-17"><a href="cleaning-data.html#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="st">Condors varchar(20),</span></span>
+<span id="cb22-18"><a href="cleaning-data.html#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="st">Comments varchar(50),</span></span>
+<span id="cb22-19"><a href="cleaning-data.html#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="st">Useful_Video varchar(20),</span></span>
+<span id="cb22-20"><a href="cleaning-data.html#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="st">FOREIGN KEY(Carcass) REFERENCES Carcasses(ID_number)</span></span>
+<span id="cb22-21"><a href="cleaning-data.html#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="st">);&quot;</span>)</span>
+<span id="cb22-22"><a href="cleaning-data.html#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="fu">dbWriteTable</span>(Condors,<span class="st">&quot;metadata&quot;</span>,Video_metadata,<span class="at">append=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p>This ran well and all my data looks good!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro---database-structure.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plotting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/02-cross-refs.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

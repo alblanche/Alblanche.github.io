@@ -9,7 +9,7 @@ _book - folder containing book files from original bookdown startup example
 _bookdown_files - contains a figure from original bookdown example
 _bookdown.yml - configuration file for book
 _output.yml - configuration file for book's output
-Series of .Rmd files - each is a chapter in my book. More to come as these get defined!
+Series of .Rmd files - each is a chapter in my book. These include the intro, cleaning data, and plotting.
 book.bib - bibliography for book
 Bookdown_final_project.Rproj - R project that I am building the book in
 index.Rmd - index for book

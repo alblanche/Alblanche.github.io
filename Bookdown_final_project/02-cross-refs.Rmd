@@ -1,34 +1,134 @@
-# Cross-references {#cross}
+# Cleaning Data
 
-Cross-references make it easier for your readers to find and link to elements in your book.
+This chapter describes the process I used to clean my Metadata sheet
 
-## Chapters and sub-chapters
 
-There are two steps to cross-reference any heading:
+## Loading initial data and packages
 
-1. Label the heading: `# Hello world {#nice-label}`. 
-    - Leave the label off if you like the automated heading generated based on your heading title: for example, `# Hello world` = `# Hello world {#hello-world}`.
-    - To label an un-numbered heading, use: `# Hello world {-#nice-label}` or `{# Hello world .unnumbered}`.
-
-1. Next, reference the labeled heading anywhere in the text using `\@ref(nice-label)`; for example, please see Chapter \@ref(cross). 
-    - If you prefer text as the link instead of a numbered reference use: [any text you want can go here](#cross).
-
-## Captioned figures and tables
-
-Figures and tables *with captions* can also be cross-referenced from elsewhere in your book using `\@ref(fig:chunk-label)` and `\@ref(tab:chunk-label)`, respectively.
-
-See Figure \@ref(fig:nice-fig).
-
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center', fig.alt='Plot with connected points showing that vapor pressure of mercury increases exponentially as temperature increases.'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
+For this section, I used packages DBI and tidyverse.
+```{r}
+library(DBI)
+library(tidyverse)
 ```
 
-Don't miss Table \@ref(tab:nice-tab).
+The following code was used to load my data files:
+```{r}
+Video_metadata<-read.csv("../../Homework/Data_files/Video_metadata.csv")
 
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(pressure, 10), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
 ```
+I changed two column names as they had periods, which could interfere with coding down the line:
+```{r}
+colnames(Video_metadata)[5]<-"Close_wide"
+colnames(Video_metadata)[10]<-"Still_on_SD_card"
+
+```
+I also loaded a couple functions I wanted to use later on:
+```{r}
+rowShift <- function(x, shiftLen = 1L) {
+  r <- (1L + shiftLen):(length(x) + shiftLen)
+  r[r<1] <- NA
+  return(x[r])
+}
+`%nin%` = Negate(`%in%`)
+```
+rowShift allows me to call a different row from a column when changing my "See previous row" into data that isn't dependent on order
+%nin% is quicker than calling every possible integer and rather specifying the couple I do not want, similar to !=
+
+## Cleaning the data
+
+I first checked how many different names I used for my carcasses.
+```{r}
+unique(Video_metadata$Species)
+
+```
+I was able to use a long pipe to clean all my data. There are several chunks, and I have split it accordingly:
+```{r}
+Video_metadata <- Video_metadata %>% 
+  mutate(Species = case_when(
+    Species %in% c("Ewe", "Ewe ", "ewe") ~ "ewe",
+    Species %in% c("Lamb", "lamb") ~ "lamb",
+    Species %in% c("Neotoma", "chipmunk") ~ "rodent",
+    Species %in% "raccoon" ~ "raccoon",
+    Species %in% "carp" ~ "carp",
+    Species %in% "calf" ~ "calf",
+    Species %in% "cow" ~ "cow",
+    Species %in% "badger" ~ "badger",
+    Species %in% c("Deer", "deer") ~ "deer",
+    Species %in% "cat" ~ "cat",
+    Species %in% "" ~ "DOUBLE CHECK"
+  )) # %>% 
+```
+This cleans up all my different "species" into recognizable carcass groups. I didn't want to just use sheep and cattle, but instead differentiating between adult/young since there is a large size difference (and although I have weight later on, this is helpful for recognition). I also included a "Double check" group since I have some blanks, that I haven't entered in yet.
+```{r eval=FALSE}
+mutate(Still_on_SD_card = case_when(
+    Still_on_SD_card == "Yes" ~ "Yes",
+    Still_on_SD_card == "Erased" ~ "Erased",
+    SD_card == "" ~ "Probably erased"
+  )) %>% 
+```
+The next chunk does a similar role, with the column identifying whether the video is still on an SD card. I reclassified all blanks as probably erased, as I have entered in most SD card numbers. However, I wanted to keep there separate from Erased since I'm not entirely certain about this and should go back to check.
+
+```{r eval=FALSE}
+mutate(Any_Video = case_when(
+    Video %in% c("eh", "y") ~ "yes",
+    Video == "n" ~ "no",
+    Video == "see above" ~ rowShift(Video, -1)
+  )) %>% 
+relocate(Any_Video, .after = Video) %>% 
+mutate(Any_Video = case_when(
+    Video == "n" ~ "no",
+    Video %in% c("eh", "y") ~ "yes"
+  )) %>%
+```
+
+This is again similar. I had one column about whether I had video from the visit, but I was using this both for useful and any video (think grass swaying in the wind, with no visits from scavengers). I had called this "eh", and here I separate the eh into no for useful video, but yes for any video. I also relocated the Any_video next to Video so I could check my work and that everything looked correct.
+
+```{r eval=FALSE}
+mutate(Useful_Video = case_when(
+    Video == "y" ~ "yes",
+    Video %in% c("eh", "n") ~ "no"
+  )) %>% 
+```
+After I transferred data from video to Useful_Video, I mutated the data again to conform to the previous "yes"/"no" rather than y/n that was in the Video column.
+
+```{r eval=FALSE}
+mutate(Close_wide = case_when(
+    Visit %nin% c("NA","") & Close_wide == "wide" ~ "wide",
+    Visit %nin% c("NA","") & Close_wide == "close" ~ "close",
+    Visit %in% c("NA","") & Close_wide == "" ~ "NA",
+    Visit %nin% c("NA","") & Close_wide %in% c("",".") ~ "only"
+  ))
+```
+
+I used my "not in" function to find the Visits that had values (ie wasn't blank or NA). Close_wide describes camera placement, as I usually had a camera closer and one farther away (giving a wider angle view). 
+
+If Visits is blank or NA that means I haven't gotten to it yet, and Close_wide should also be blank. However, if Close_wide is blank with a value for Visit, it means only one camera was there, so I should label it as "only". I briefly also used a period to designate "only" so I included that as well.
+
+## Connecting to database
+Now that the data is cleaned, I can connect it to the condors database and have the database run all the specified checks.
+```{r eval=FALSE}
+Condors <- dbConnect(RSQLite::SQLite(), "condors.db")
+dbExecute(Condors, "CREATE TABLE metadata (
+Video_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+Carcass char(3),
+Description varchar(25),
+Species varchar(15),
+Visit varchar(5),
+Close_wide varchar(6) CHECK (Close_wide IN ('only','close','wide', 'NA')),
+Box_drive varchar(3) CHECK (Box_drive IN ('Yes','No','')),
+External_Hard_Drive varchar(3) CHECK (External_Hard_drive IN ('Yes','No','')),
+Scored_on_BORIS varchar(3) CHECK (Scored_on_BORIS IN ('Yes','No','')),
+Need_to_time_offset char(3),
+Still_on_SD_card varchar(3) CHECK (Still_on_SD_card IN ('Yes','Erased','Probably erased')),
+SD_card varchar(10),
+Video varchar(20),
+Any_Video varchar(20),
+Condors varchar(20),
+Comments varchar(50),
+Useful_Video varchar(20),
+FOREIGN KEY(Carcass) REFERENCES Carcasses(ID_number)
+);")
+dbWriteTable(Condors,"metadata",Video_metadata,append=TRUE)
+
+```
+This ran well and all my data looks good!
